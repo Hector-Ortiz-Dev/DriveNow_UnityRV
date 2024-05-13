@@ -19,9 +19,18 @@ public class CarController : MonoBehaviour
     public BoxCollider volumeFirstLevel;
     public BoxCollider volumeSecondLevel;
     public BoxCollider volumeThirdLevel;
+    public Transform carroTransform;
     public bool volumen1 = false;
     public bool volumen2 = false;
     public bool volumen3 = false;
+    public bool victoria1 = false;
+    public bool victoria2 = false;
+    public bool victoria3 = false;
+    public bool conteoActivado1 = false;
+    public bool conteoActivado2 = false;
+    public bool conteoActivado3 = false;
+    private float tiempoConteo = 0f;
+    private float duracionConteo = 5f;
     public Transform frontLeftWheelTransform;
     public Transform frontRightWheelTransform;
     public Transform rearLeftWheelTransform;
@@ -40,10 +49,94 @@ public class CarController : MonoBehaviour
         UpdateWheels();
 
 
+        if (conteoActivado1)
+        {
+
+            Debug.Log("Contando..." + tiempoConteo);
+
+            tiempoConteo += Time.deltaTime;
+            if (tiempoConteo >= duracionConteo)
+            {
+
+                conteoActivado1 = false;
+                tiempoConteo = 0f;
+                victoria1 = true;
+
+                if (victoria1)
+                {
+                    string MensajeVictoria = Victoria(carroTransform, 1);
+                    Debug.Log("¡Victoria en el nivel 1!");
+                    Debug.Log("¡Calificació:" + MensajeVictoria);
+                    conteoActivado1 = false;
+                    volumeFirstLevel.enabled = false;
+                }
+               
+            }
+        }
+
+
+        if (conteoActivado2)
+        {
+
+            Debug.Log("Contando..." + tiempoConteo);
+
+            tiempoConteo += Time.deltaTime;
+            if (tiempoConteo >= duracionConteo)
+            {
+
+                conteoActivado2 = false;
+                tiempoConteo = 0f;
+                victoria2 = true;
+
+                if (victoria2)
+                {
+
+                    Debug.Log("¡Victoria en el nivel 2!");
+                    conteoActivado2 = false;
+                    volumeSecondLevel.enabled = false;
+                }
+
+            }
+        }
+
+        if (conteoActivado3)
+        {
+
+            Debug.Log("Contando..." + tiempoConteo);
+
+            tiempoConteo += Time.deltaTime;
+            if (tiempoConteo >= duracionConteo)
+            {
+
+                conteoActivado3 = false;
+                tiempoConteo = 0f;
+                victoria3 = true;
+
+                if (victoria3)
+                {
+                    Debug.Log("¡Victoria en el nivel 3!");
+                    conteoActivado1 = false;
+                    volumeThirdLevel.enabled = false;
+                }
+
+            }
+        }
+
+
         if (volumen1 == true)
         {
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeFirstLevel);
             Debug.Log("Porcentaje en el volumen del nivel 1: " + porcentajeEnVolume + "%");
+
+            if (porcentajeEnVolume >= 105 && porcentajeEnVolume <= 130f)
+            {
+                conteoActivado1 = true;
+            }
+            else
+            {
+                conteoActivado1 = false;
+                tiempoConteo = 0f;
+            }
         }
 
 
@@ -51,12 +144,46 @@ public class CarController : MonoBehaviour
         {
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeSecondLevel);
             Debug.Log("Porcentaje en el volumen del nivel 2: " + porcentajeEnVolume + "%");
+
+            if (porcentajeEnVolume >= 105 && porcentajeEnVolume <= 130f)
+            {
+                conteoActivado2 = true;
+            }
+            else
+            {
+                conteoActivado2 = false;
+                tiempoConteo = 0f;
+            }
+
+
         }
 
         if (volumen3 == true)
         {
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeThirdLevel);
             Debug.Log("Porcentaje en el volumen del nivel 3: " + porcentajeEnVolume + "%");
+
+
+            Vector3 angulos = carroTransform.eulerAngles;
+
+
+            if (porcentajeEnVolume >= 105 && porcentajeEnVolume <= 130f)
+            {
+                conteoActivado3 = true;
+            }
+            else
+            {
+                conteoActivado3 = false;
+                tiempoConteo = 0f;
+            }
+
+
+            //if (((angulos.x >= anguloMinimo && angulos.x <= anguloMaximo) || (angulos.x >= 360 - anguloMaximo && angulos.x <= 360 - anguloMinimo)) &&
+            //     ((angulos.y >= -5f && angulos.y <= 0f) || (angulos.y >= 175f && angulos.y <= 185f) || (angulos.y >= 360 - 5f && angulos.y <= 360f)) &&
+            //    ((angulos.z >= anguloMinimo && angulos.z <= anguloMaximo) || (angulos.z >= 360 - anguloMaximo && angulos.z <= 360 - anguloMinimo)))
+            //{
+            //}
+
         }
 
 
@@ -75,8 +202,13 @@ public class CarController : MonoBehaviour
         // Calculamos el porcentaje del carro dentro del volumen
         float porcentajeEnVolume = (volumenInterseccion / volumenCarro) * 100f;
 
-        return porcentajeEnVolume;
+
+            return porcentajeEnVolume;
     }
+
+
+  
+
 
     private float VolumenInterseccion(BoxCollider collider1, BoxCollider collider2)
     {
@@ -131,12 +263,12 @@ public class CarController : MonoBehaviour
 
         if (other == volumeSecondLevel)
         {
-            volumen2 = true;
+            volumen2 = false;
         }
 
         if (other == volumeThirdLevel)
         {
-            volumen3 = true;
+            volumen3 = false;
         }
 
     }
@@ -184,5 +316,40 @@ public class CarController : MonoBehaviour
         trans.rotation = rot;
         trans.position = pos;
     }
+
+
+    // WIP
+    private string Victoria(Transform carroTransform, int nivel)
+    {
+        Vector3 angulos = carroTransform.eulerAngles;
+
+        switch (nivel)
+        {
+            case 1:
+                if ((angulos.y >= 85 && angulos.y <= 90) || (angulos.y >= -85 && angulos.y <= -90))
+                {
+                    return "A+";
+                }
+                break;
+            case 2:
+                if ((angulos.y >= 85 && angulos.y <= 90) || (angulos.y >= -85 && angulos.y <= -90))
+                {
+                    return "A+";
+                }
+                break;
+            case 3:
+                if ((angulos.x == 0 && angulos.y == 0 && angulos.z == 0) ||
+                    (angulos.x == 0 && angulos.y == 180 && angulos.z == 0))
+                {
+                    return "A+";
+                }
+                break;
+            default:
+                return "Sin calificación";
+        }
+
+        return "B";
+    }
+
 
 }
