@@ -84,7 +84,7 @@ public class CarController : MonoBehaviour
 
             int tiempoConteoInt = Mathf.FloorToInt(tiempoConteo);
 
-            textoHUD.text = "Manten el carro en esa posición 5 segundos, segundos contados: " + tiempoConteoInt;
+            textoHUD.text = "Manten el carro en esa posiciï¿½n 5 segundos, segundos contados: " + tiempoConteoInt;
 
 
             tiempoConteo += Time.deltaTime;
@@ -107,7 +107,6 @@ public class CarController : MonoBehaviour
         }
 
 
-
         if (conteoActivado2)
         {
 
@@ -115,7 +114,7 @@ public class CarController : MonoBehaviour
 
             int tiempoConteoInt = Mathf.FloorToInt(tiempoConteo);
 
-            textoHUD.text = "Manten el carro en esa posición 5 segundos, segundos contados: " + tiempoConteoInt;
+            textoHUD.text = "Manten el carro en esa posiciï¿½n 5 segundos, segundos contados: " + tiempoConteoInt;
 
             tiempoConteo += Time.deltaTime;
             if (tiempoConteo >= duracionConteo)
@@ -143,7 +142,7 @@ public class CarController : MonoBehaviour
 
             int tiempoConteoInt = Mathf.FloorToInt(tiempoConteo);
 
-            textoHUD.text = "Manten el carro en esa posición 5 segundos, segundos contados: " + tiempoConteoInt;
+            textoHUD.text = "Manten el carro en esa posiciï¿½n 5 segundos, segundos contados: " + tiempoConteoInt;
 
             tiempoConteo += Time.deltaTime;
             if (tiempoConteo >= duracionConteo)
@@ -250,7 +249,7 @@ public class CarController : MonoBehaviour
 
             int tiempoConteoInt = Mathf.FloorToInt(duracionConteonegativo);
 
-            textoMenu.text = "Se volvera al menú principal en : " + tiempoConteoInt + " segundos";
+            textoMenu.text = "Se volvera al menï¿½ principal en : " + tiempoConteoInt + " segundos";
 
             btn_victoria1.gameObject.SetActive(false);
             btn_victoria2.gameObject.SetActive(false);
@@ -273,7 +272,7 @@ public class CarController : MonoBehaviour
 
     private float CalcularPorcentajeEnVolume(BoxCollider carroCollider, BoxCollider volumenCollider)
     {
-        // Calculamos el volumen del área de intersección entre los colliders
+        // Calculamos el volumen del ï¿½rea de intersecciï¿½n entre los colliders
         float volumenInterseccion = VolumenInterseccion(carroCollider, volumenCollider);
 
         // Calculamos el volumen total del box collider del carro
@@ -292,10 +291,10 @@ public class CarController : MonoBehaviour
 
     private float VolumenInterseccion(BoxCollider collider1, BoxCollider collider2)
     {
-        // Obtenemos la intersección de los bounds de los colliders
+        // Obtenemos la intersecciï¿½n de los bounds de los colliders
         Bounds intersectionBounds = InterseccionBounds(collider1.bounds, collider2.bounds);
 
-        // Calculamos el volumen del área de intersección
+        // Calculamos el volumen del ï¿½rea de intersecciï¿½n
         float volumenInterseccion = intersectionBounds.size.x * intersectionBounds.size.y * intersectionBounds.size.z;
 
         return volumenInterseccion;
@@ -303,7 +302,7 @@ public class CarController : MonoBehaviour
 
     private Bounds InterseccionBounds(Bounds bounds1, Bounds bounds2)
     {
-        // Calculamos los límites de la intersección
+        // Calculamos los lï¿½mites de la intersecciï¿½n
         float minX = Mathf.Max(bounds1.min.x, bounds2.min.x);
         float minY = Mathf.Max(bounds1.min.y, bounds2.min.y);
         float minZ = Mathf.Max(bounds1.min.z, bounds2.min.z);
@@ -311,7 +310,7 @@ public class CarController : MonoBehaviour
         float maxY = Mathf.Min(bounds1.max.y, bounds2.max.y);
         float maxZ = Mathf.Min(bounds1.max.z, bounds2.max.z);
 
-        // Creamos y devolvemos los bounds de la intersección
+        // Creamos y devolvemos los bounds de la intersecciï¿½n
         return new Bounds(new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2),
                           new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
     }
