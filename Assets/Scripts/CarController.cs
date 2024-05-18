@@ -68,6 +68,17 @@ public class CarController : MonoBehaviour
     #endregion
 
 
+    #region AUDIOS
+    public AudioSource audioInicial;
+    public AudioSource audioSource;
+    public AudioClip audioInicialC;
+    public AudioClip audioVictorial;
+    public AudioClip audioCollision;
+    public AudioClip audioCarroMovimiento;
+    public bool audioVictory = false;
+    #endregion
+
+
 
     private void FixedUpdate()
     {
@@ -97,6 +108,8 @@ public class CarController : MonoBehaviour
 
                 if (victoria1)
                 {
+                    audioInicial.clip = audioInicialC;
+                    audioInicial.Play();
                     btn_victoria1.gameObject.SetActive(true);
                     textoHUD.text = "";
                     conteoActivado1 = false;
@@ -127,6 +140,8 @@ public class CarController : MonoBehaviour
 
                 if (victoria2)
                 {
+                    audioInicial.clip = audioInicialC;
+                    audioInicial.Play();
                     textoHUD.text = "";
                     btn_victoria2.gameObject.SetActive(true);
                     conteoActivado2 = false;
@@ -155,9 +170,11 @@ public class CarController : MonoBehaviour
 
                 if (victoria3)
                 {
+
+                    audioInicial.clip = audioInicialC;
+                    audioInicial.Play();
                     textoHUD.text = "";
                     btn_victoria3.gameObject.SetActive(true);
-
                     conteoActivado1 = false;
                     volumeThirdLevel.enabled = false;
                 }
@@ -246,6 +263,15 @@ public class CarController : MonoBehaviour
 
         if (victoria1 && victoria2 && victoria3)
         {
+
+            if (!audioInicial.isPlaying && !audioVictory)
+            {
+                audioInicial.clip = audioVictorial;
+                audioInicial.Play();
+                audioVictory = true;
+            }
+       
+
             imagenGeneral.gameObject.SetActive(true);
 
             int tiempoConteoInt = Mathf.FloorToInt(duracionConteonegativo);
@@ -347,6 +373,10 @@ public class CarController : MonoBehaviour
         }
     }
 
+
+
+
+
     private void OnTriggerExit(Collider other)
     {
         if (other == volumeFirstLevel)
@@ -383,7 +413,19 @@ public class CarController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         isBreaking = Input.GetKey(KeyCode.Space);
-    }
+
+        if ((horizontalInput != 0 || verticalInput != 0) && !audioSource.isPlaying)
+        {
+            audioSource.clip = audioCarroMovimiento;
+            audioSource.Play();
+        }
+
+        if (isBreaking && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+
+        }
 
     private void HandleSteering()
     {
@@ -419,6 +461,17 @@ public class CarController : MonoBehaviour
         wheelCollider.GetWorldPose(out pos, out rot);
         trans.rotation = rot;
         trans.position = pos;
+    }
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Reproduce el audio de colisión
+        if (audioCollision != null)
+        {
+            audioInicial.clip = audioCollision;
+            audioInicial.Play();
+        }
     }
 
 
