@@ -2,25 +2,46 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+using TMPro;
 
 public class CarController : MonoBehaviour
 {
+
+    #region CONTROLES VEHICULO
     private float horizontalInput;
     private float verticalInput;
     private float steerAngle;
     private bool isBreaking;
-    
-
     public WheelCollider frontLeftWheelCollider;
     public WheelCollider frontRightWheelCollider;
     public WheelCollider rearLeftWheelCollider;
     public WheelCollider rearRightWheelCollider;
+    public Transform frontLeftWheelTransform;
+    public Transform frontRightWheelTransform;
+    public Transform rearLeftWheelTransform;
+    public Transform rearRightWheelTransform;
+    public float maxSteeringAngle = 30f;
+    public float motorForce = 50f;
+    public float brakeForce = 0f;
+    #endregion
+
+
+    #region VICTORIA Y VOLUMEN
+    public TextMeshProUGUI textoHUD;
     public BoxCollider volumeCar;
     public BoxCollider volumeFirstLevel;
+    public BoxCollider volumeFirstLevelC;
+    public BoxCollider volumeFirstLevelC2;
     public BoxCollider volumeSecondLevel;
     public BoxCollider volumeThirdLevel;
     public Transform carroTransform;
+    public Image imagenGeneral;
+    public TextMeshProUGUI textoMenu;
     public bool volumen1 = false;
+    public bool volumen1c = false;
+    public bool volumen1c2 = false;
     public bool volumen2 = false;
     public bool volumen3 = false;
     public bool victoria1 = false;
@@ -29,16 +50,34 @@ public class CarController : MonoBehaviour
     public bool conteoActivado1 = false;
     public bool conteoActivado2 = false;
     public bool conteoActivado3 = false;
+    private bool volverAlMenu = false;
     private float tiempoConteo = 0f;
     private float duracionConteo = 5f;
-    public Transform frontLeftWheelTransform;
-    public Transform frontRightWheelTransform;
-    public Transform rearLeftWheelTransform;
-    public Transform rearRightWheelTransform;
+    private float duracionConteonegativo = 5f;
+    private float tiempoConteo2 = 0f;
 
-    public float maxSteeringAngle = 30f;
-    public float motorForce = 50f;
-    public float brakeForce = 0f;
+
+    public Button btn_victoria1;
+    public Button btn_victoria2;
+    public Button btn_victoria3;
+
+
+
+
+
+    #endregion
+
+
+    #region AUDIOS
+    public AudioSource audioInicial;
+    public AudioSource audioSource;
+    public AudioClip audioInicialC;
+    public AudioClip audioVictorial;
+    public AudioClip audioCollision;
+    public AudioClip audioCarroMovimiento;
+    public bool audioVictory = false;
+    #endregion
+
 
 
     private void FixedUpdate()
@@ -54,6 +93,11 @@ public class CarController : MonoBehaviour
 
             Debug.Log("Contando..." + tiempoConteo);
 
+            int tiempoConteoInt = Mathf.FloorToInt(tiempoConteo);
+
+            textoHUD.text = "Manten el carro en esa posición 5 segundos, segundos contados: " + tiempoConteoInt;
+
+
             tiempoConteo += Time.deltaTime;
             if (tiempoConteo >= duracionConteo)
             {
@@ -64,9 +108,10 @@ public class CarController : MonoBehaviour
 
                 if (victoria1)
                 {
-                    string MensajeVictoria = Victoria(carroTransform, 1);
-                    Debug.Log("¡Victoria en el nivel 1!");
-                    Debug.Log("¡Calificació:" + MensajeVictoria);
+                    audioInicial.clip = audioInicialC;
+                    audioInicial.Play();
+                    btn_victoria1.gameObject.SetActive(true);
+                    textoHUD.text = "";
                     conteoActivado1 = false;
                     volumeFirstLevel.enabled = false;
                 }
@@ -75,10 +120,15 @@ public class CarController : MonoBehaviour
         }
 
 
+
         if (conteoActivado2)
         {
 
             Debug.Log("Contando..." + tiempoConteo);
+
+            int tiempoConteoInt = Mathf.FloorToInt(tiempoConteo);
+
+            textoHUD.text = "Manten el carro en esa posición 5 segundos, segundos contados: " + tiempoConteoInt;
 
             tiempoConteo += Time.deltaTime;
             if (tiempoConteo >= duracionConteo)
@@ -90,8 +140,10 @@ public class CarController : MonoBehaviour
 
                 if (victoria2)
                 {
-
-                    Debug.Log("¡Victoria en el nivel 2!");
+                    audioInicial.clip = audioInicialC;
+                    audioInicial.Play();
+                    textoHUD.text = "";
+                    btn_victoria2.gameObject.SetActive(true);
                     conteoActivado2 = false;
                     volumeSecondLevel.enabled = false;
                 }
@@ -104,6 +156,10 @@ public class CarController : MonoBehaviour
 
             Debug.Log("Contando..." + tiempoConteo);
 
+            int tiempoConteoInt = Mathf.FloorToInt(tiempoConteo);
+
+            textoHUD.text = "Manten el carro en esa posición 5 segundos, segundos contados: " + tiempoConteoInt;
+
             tiempoConteo += Time.deltaTime;
             if (tiempoConteo >= duracionConteo)
             {
@@ -114,7 +170,11 @@ public class CarController : MonoBehaviour
 
                 if (victoria3)
                 {
-                    Debug.Log("¡Victoria en el nivel 3!");
+
+                    audioInicial.clip = audioInicialC;
+                    audioInicial.Play();
+                    textoHUD.text = "";
+                    btn_victoria3.gameObject.SetActive(true);
                     conteoActivado1 = false;
                     volumeThirdLevel.enabled = false;
                 }
@@ -123,42 +183,55 @@ public class CarController : MonoBehaviour
         }
 
 
-        if (volumen1 == true)
+        if (volumen1 == true && victoria1 == false)
         {
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeFirstLevel);
             Debug.Log("Porcentaje en el volumen del nivel 1: " + porcentajeEnVolume + "%");
 
-            if (porcentajeEnVolume >= 105 && porcentajeEnVolume <= 130f)
+
+            Vector3 angulos = carroTransform.eulerAngles;
+
+
+          if ((!volumen1c || !volumen1c2))
             {
-                conteoActivado1 = true;
-            }
-            else
-            {
-                conteoActivado1 = false;
-                tiempoConteo = 0f;
+                if (porcentajeEnVolume >= 95f && porcentajeEnVolume <= 130f)
+                {
+                    conteoActivado1 = true;
+                }
+                else
+                {
+                    conteoActivado1 = false;
+                    tiempoConteo = 0f;
+                }
             }
         }
 
 
-        if (volumen2 == true)
+        if (volumen2 == true && victoria2 == false)
         {
+
+            Vector3 angulos = carroTransform.eulerAngles;
+
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeSecondLevel);
             Debug.Log("Porcentaje en el volumen del nivel 2: " + porcentajeEnVolume + "%");
 
-            if (porcentajeEnVolume >= 105 && porcentajeEnVolume <= 130f)
+          //  if ((angulos.y >= 85 && angulos.y <= 95) || (angulos.y >= -85 && angulos.y <= -90))
             {
-                conteoActivado2 = true;
-            }
-            else
-            {
-                conteoActivado2 = false;
-                tiempoConteo = 0f;
-            }
 
+                if (porcentajeEnVolume >= 95f && porcentajeEnVolume <= 130f)
+                {
+                    conteoActivado2 = true;
+                }
+                else
+                {
+                    conteoActivado2 = false;
+                    tiempoConteo = 0f;
+                }
+            }
 
         }
 
-        if (volumen3 == true)
+        if (volumen3 == true && victoria3 == false)
         {
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeThirdLevel);
             Debug.Log("Porcentaje en el volumen del nivel 3: " + porcentajeEnVolume + "%");
@@ -166,23 +239,56 @@ public class CarController : MonoBehaviour
 
             Vector3 angulos = carroTransform.eulerAngles;
 
-
-            if (porcentajeEnVolume >= 105 && porcentajeEnVolume <= 130f)
+         //  if (angulos.y >= -5 && angulos.y <= 5)
             {
-                conteoActivado3 = true;
+
+                if (porcentajeEnVolume >= 95f && porcentajeEnVolume <= 130f)
+                {
+                    conteoActivado3 = true;
+                }
+                else
+                {
+                    conteoActivado3 = false;
+                    tiempoConteo = 0f;
+                }
             }
-            else
+
+        }
+
+
+        if (volverAlMenu)
+        {
+            //VOLVER AL MENU
+        }
+
+        if (victoria1 && victoria2 && victoria3)
+        {
+
+            if (!audioInicial.isPlaying && !audioVictory)
             {
-                conteoActivado3 = false;
-                tiempoConteo = 0f;
+                audioInicial.clip = audioVictorial;
+                audioInicial.Play();
+                audioVictory = true;
             }
+       
 
+            imagenGeneral.gameObject.SetActive(true);
 
-            //if (((angulos.x >= anguloMinimo && angulos.x <= anguloMaximo) || (angulos.x >= 360 - anguloMaximo && angulos.x <= 360 - anguloMinimo)) &&
-            //     ((angulos.y >= -5f && angulos.y <= 0f) || (angulos.y >= 175f && angulos.y <= 185f) || (angulos.y >= 360 - 5f && angulos.y <= 360f)) &&
-            //    ((angulos.z >= anguloMinimo && angulos.z <= anguloMaximo) || (angulos.z >= 360 - anguloMaximo && angulos.z <= 360 - anguloMinimo)))
-            //{
-            //}
+            int tiempoConteoInt = Mathf.FloorToInt(duracionConteonegativo);
+
+            textoMenu.text = "Se volvera al menú principal en : " + tiempoConteoInt + " segundos";
+
+            btn_victoria1.gameObject.SetActive(false);
+            btn_victoria2.gameObject.SetActive(false);
+            btn_victoria3.gameObject.SetActive(false);
+
+            duracionConteonegativo -= Time.deltaTime;
+
+            if (tiempoConteo2 >= duracionConteo || volverAlMenu)
+            {
+                tiempoConteo2 = 0f;
+                volverAlMenu = true;
+            }
 
         }
 
@@ -241,18 +347,35 @@ public class CarController : MonoBehaviour
         if (other == volumeFirstLevel)
         {
             volumen1 = true;
+
         }
 
-        if (other == volumeSecondLevel)
+        if (other == volumeSecondLevel && victoria2 == false)
         {
             volumen2 = true;
+
         }
 
-        if (other == volumeThirdLevel)
+        if (other == volumeThirdLevel && victoria3 == false)
         {
             volumen3 = true;
         }
+
+        if (other == volumeFirstLevelC)
+        {
+            volumen1c = true;
+        }
+
+
+        if (other == volumeFirstLevelC)
+        {
+            volumen1c2 = true;
+        }
     }
+
+
+
+
 
     private void OnTriggerExit(Collider other)
     {
@@ -271,6 +394,17 @@ public class CarController : MonoBehaviour
             volumen3 = false;
         }
 
+
+        if (other == volumeFirstLevelC)
+        {
+            volumen1c = false;
+        }
+
+
+        if (other == volumeFirstLevelC)
+        {
+            volumen1c2 = false;
+        }
     }
 
 
@@ -279,7 +413,19 @@ public class CarController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         isBreaking = Input.GetKey(KeyCode.Space);
-    }
+
+        if ((horizontalInput != 0 || verticalInput != 0) && !audioSource.isPlaying)
+        {
+            audioSource.clip = audioCarroMovimiento;
+            audioSource.Play();
+        }
+
+        if (isBreaking && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+
+        }
 
     private void HandleSteering()
     {
@@ -318,38 +464,26 @@ public class CarController : MonoBehaviour
     }
 
 
-    // WIP
-    private string Victoria(Transform carroTransform, int nivel)
+    void OnCollisionEnter(Collision collision)
     {
-        Vector3 angulos = carroTransform.eulerAngles;
-
-        switch (nivel)
+        // Reproduce el audio de colisión
+        if (audioCollision != null)
         {
-            case 1:
-                if ((angulos.y >= 85 && angulos.y <= 90) || (angulos.y >= -85 && angulos.y <= -90))
-                {
-                    return "A+";
-                }
-                break;
-            case 2:
-                if ((angulos.y >= 85 && angulos.y <= 90) || (angulos.y >= -85 && angulos.y <= -90))
-                {
-                    return "A+";
-                }
-                break;
-            case 3:
-                if ((angulos.x == 0 && angulos.y == 0 && angulos.z == 0) ||
-                    (angulos.x == 0 && angulos.y == 180 && angulos.z == 0))
-                {
-                    return "A+";
-                }
-                break;
-            default:
-                return "Sin calificación";
+            audioInicial.clip = audioCollision;
+            audioInicial.Play();
         }
-
-        return "B";
     }
+
+
+    public void Start()
+    {
+        btn_victoria1.gameObject.SetActive(false);
+        imagenGeneral.gameObject.SetActive(false);
+        btn_victoria2.gameObject.SetActive(false);
+        btn_victoria3.gameObject.SetActive(false);
+    }
+
+
 
 
 }
