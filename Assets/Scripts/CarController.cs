@@ -29,7 +29,7 @@ public class CarController : MonoBehaviour
     #endregion
 
 
-    #region VICTORIA Y VOLUMEN
+    #region VICTORIA/DERROTA Y VOLUMEN
     public TextMeshProUGUI textoHUD;
     public BoxCollider volumeCar;
     public BoxCollider volumeFirstLevel;
@@ -41,7 +41,10 @@ public class CarController : MonoBehaviour
     public BoxCollider volumeThirdLevel;
     public Transform carroTransform;
     public Image imagenGeneral;
+    public Image imagenGeneral2;
     public TextMeshProUGUI textoMenu;
+    public TextMeshProUGUI textoMenu2;
+    private int conteoChoques = 0;
     public bool volumen1 = false;
     public bool volumen1c = false;
     public bool volumen1c2 = false;
@@ -59,7 +62,8 @@ public class CarController : MonoBehaviour
     private float tiempoConteo = 0f;
     private float duracionConteo = 5f;
     private float duracionConteonegativo = 5f;
-    private float tiempoConteo2 = 0f;
+    public bool derrota = false;
+    private float duracionConteonegativo2 = 5f;
 
 
     public Button btn_victoria1;
@@ -283,6 +287,7 @@ public class CarController : MonoBehaviour
 
             int tiempoConteoInt = Mathf.FloorToInt(duracionConteonegativo);
 
+            textoHUD.text = "";
             textoMenu.text = "Se volvera al menú principal en : " + tiempoConteoInt + " segundos";
 
             btn_victoria1.gameObject.SetActive(false);
@@ -293,10 +298,30 @@ public class CarController : MonoBehaviour
 
             if (duracionConteonegativo <= 0 || volverAlMenu)
             {
-                tiempoConteo2 = 0f;
                 volverAlMenu = true;
             }
 
+        }
+
+        if (conteoChoques >= 10)
+        {
+            imagenGeneral2.gameObject.SetActive(true);
+
+            int tiempoConteoInt = Mathf.FloorToInt(duracionConteonegativo2);
+
+            textoHUD.text = "";
+            textoMenu2.text = "Se volvera al menú principal en : " + tiempoConteoInt + " segundos";
+
+            btn_victoria1.gameObject.SetActive(false);
+            btn_victoria2.gameObject.SetActive(false);
+            btn_victoria3.gameObject.SetActive(false);
+
+            duracionConteonegativo2 -= Time.deltaTime;
+
+            if (duracionConteonegativo2 <= 0 || volverAlMenu)
+            {
+                volverAlMenu = true;
+            }
         }
 
 
@@ -501,6 +526,8 @@ public class CarController : MonoBehaviour
         // Reproduce el audio de colisión
         if (audioCollision != null)
         {
+            conteoChoques++;
+            Debug.Log("Choques: " + conteoChoques);
             audioInicial.clip = audioCollision;
             audioInicial.Play();
         }
@@ -511,8 +538,11 @@ public class CarController : MonoBehaviour
     {
         btn_victoria1.gameObject.SetActive(false);
         imagenGeneral.gameObject.SetActive(false);
+        imagenGeneral2.gameObject.SetActive(false);
         btn_victoria2.gameObject.SetActive(false);
         btn_victoria3.gameObject.SetActive(false);
+
+
     }
 
 
