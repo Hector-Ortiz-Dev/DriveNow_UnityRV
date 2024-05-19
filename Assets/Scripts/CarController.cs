@@ -12,6 +12,7 @@ public class CarController : MonoBehaviour
     #region VOLANTE
     LogitechGSDK.LogiControllerPropertiesData properties;
 
+    public Transform steeringWheelTransform;
     public float xAxes, GasInput, BreakInput;
     public bool BreakStatus = false, isBackWard = false, isWheelConnected = false;
 
@@ -541,6 +542,16 @@ public class CarController : MonoBehaviour
         UpdateWheelPos(frontRightWheelCollider, frontRightWheelTransform);
         UpdateWheelPos(rearLeftWheelCollider, rearLeftWheelTransform);
         UpdateWheelPos(rearRightWheelCollider, rearRightWheelTransform);
+
+        UpdateSteeringWheel();
+    }
+
+    private void UpdateSteeringWheel()
+    {
+        if (steeringWheelTransform != null)
+        {
+            steeringWheelTransform.localRotation = Quaternion.Euler(-65, 0, 0) * Quaternion.Euler(0, steerAngle, 0);
+        }
     }
 
     private void UpdateWheelPos(WheelCollider wheelCollider, Transform trans)
