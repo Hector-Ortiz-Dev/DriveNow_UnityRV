@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 using TMPro;
 
@@ -35,6 +36,8 @@ public class CarController : MonoBehaviour
     public BoxCollider volumeFirstLevelC;
     public BoxCollider volumeFirstLevelC2;
     public BoxCollider volumeSecondLevel;
+    public BoxCollider volumeSecondLevelC;
+    public BoxCollider volumeSecondLevelC2;
     public BoxCollider volumeThirdLevel;
     public Transform carroTransform;
     public Image imagenGeneral;
@@ -42,6 +45,8 @@ public class CarController : MonoBehaviour
     public bool volumen1 = false;
     public bool volumen1c = false;
     public bool volumen1c2 = false;
+    public bool volumen2c = false;
+    public bool volumen2c2 = false;
     public bool volumen2 = false;
     public bool volumen3 = false;
     public bool victoria1 = false;
@@ -192,7 +197,7 @@ public class CarController : MonoBehaviour
             Vector3 angulos = carroTransform.eulerAngles;
 
 
-          if ((!volumen1c || !volumen1c2))
+          if ((!volumen1c && !volumen1c2))
             {
                 if (porcentajeEnVolume >= 95f && porcentajeEnVolume <= 130f)
                 {
@@ -215,7 +220,7 @@ public class CarController : MonoBehaviour
             float porcentajeEnVolume = CalcularPorcentajeEnVolume(volumeCar, volumeSecondLevel);
             Debug.Log("Porcentaje en el volumen del nivel 2: " + porcentajeEnVolume + "%");
 
-          //  if ((angulos.y >= 85 && angulos.y <= 95) || (angulos.y >= -85 && angulos.y <= -90))
+           if (!volumen2c && !volumen2c2)
             {
 
                 if (porcentajeEnVolume >= 95f && porcentajeEnVolume <= 130f)
@@ -258,7 +263,9 @@ public class CarController : MonoBehaviour
 
         if (volverAlMenu)
         {
-            //VOLVER AL MENU
+            string sceneName = "GameMenuScene";
+
+            SceneManager.LoadScene(sceneName);
         }
 
         if (victoria1 && victoria2 && victoria3)
@@ -284,7 +291,7 @@ public class CarController : MonoBehaviour
 
             duracionConteonegativo -= Time.deltaTime;
 
-            if (tiempoConteo2 >= duracionConteo || volverAlMenu)
+            if (duracionConteonegativo <= 0 || volverAlMenu)
             {
                 tiempoConteo2 = 0f;
                 volverAlMenu = true;
@@ -371,6 +378,17 @@ public class CarController : MonoBehaviour
         {
             volumen1c2 = true;
         }
+
+        if (other == volumeSecondLevelC)
+        {
+            volumen2c = true;
+        }
+
+
+        if (other == volumeSecondLevelC2)
+        {
+            volumen2c2 = true;
+        }
     }
 
 
@@ -405,6 +423,20 @@ public class CarController : MonoBehaviour
         {
             volumen1c2 = false;
         }
+
+
+        if (other == volumeSecondLevelC)
+        {
+            volumen2c = false;
+        }
+
+
+        if (other == volumeSecondLevelC2)
+        {
+            volumen2c2 = false;
+        }
+
+
     }
 
 
