@@ -33,7 +33,7 @@ public class colisionarduino : MonoBehaviour
     void Start()
     {
         // Configura el puerto serial para comunicarse con Arduino
-        serialPort = new SerialPort("COM4", 9600);
+        serialPort = new SerialPort("COM3", 9600);
 
         try
         {
