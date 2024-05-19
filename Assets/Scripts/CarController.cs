@@ -9,6 +9,14 @@ using TMPro;
 
 public class CarController : MonoBehaviour
 {
+    #region VOLANTE
+    LogitechGSDK.LogiControllerPropertiesData properties;
+
+    public float xAxes, GasInput, BreakInput;
+    public bool BreakStatus = false, isBackWard = false, isWheelConnected = false;
+
+    public int CurrentGear;
+    #endregion
 
     #region CONTROLES VEHICULO
     private float horizontalInput;
@@ -467,9 +475,33 @@ public class CarController : MonoBehaviour
 
     private void GetInput()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-        isBreaking = Input.GetKey(KeyCode.Space);
+
+        //Volante
+        if (isWheelConnected == true)
+        {
+            //Giros de Volante
+            horizontalInput = xAxes;
+            //Freno
+            isBreaking = BreakStatus;
+
+            //Avanzar o retroceder
+            if (isBackWard == false)
+            {
+                verticalInput = GasInput;
+            }
+            else if (isBackWard == true)
+            {
+                verticalInput = GasInput * -1;
+            }
+        }
+        else if (isWheelConnected == false) //TECLADO
+        {
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
+            isBreaking = Input.GetKey(KeyCode.Space);
+        }
+
+
 
         if ((horizontalInput != 0 || verticalInput != 0) && !audioSource.isPlaying)
         {
@@ -542,10 +574,96 @@ public class CarController : MonoBehaviour
         btn_victoria2.gameObject.SetActive(false);
         btn_victoria3.gameObject.SetActive(false);
 
+        //Configuraciones VOLANTE
+        // Use this for initialization 
+        //not ignoring xinput in this example 
+        LogitechGSDK.LogiSteeringInitialize(false);
+        LogitechGSDK.LogiStopSpringForce(0);
+        LogitechGSDK.LogiStopConstantForce(0);
+        LogitechGSDK.LogiStopDamperForce(0);
+        LogitechGSDK.LogiStopDirtRoadEffect(0);
+
+        LogitechGSDK.LogiPlaySpringForce(0, 5, 5, 5);
+        LogitechGSDK.LogiGenerateNonLinearValues(0, -100);
 
     }
+        
+    // Update is called once per frame 
+    void Update()
+    {
+
+        //Recibir inputs
+        if (LogitechGSDK.LogiUpdate() && LogitechGSDK.LogiIsConnected(0))
+        {
+            isWheelConnected = true;
+
+            //Vibracion volante
+            if (LogitechGSDK.LogiIsPlaying(0, LogitechGSDK.LOGI_FORCE_SPRING))
+            {
+                LogitechGSDK.LogiStopSpringForce(0);
+
+                //LogitechGSDK.LogiPlaySpringForce(0, 5, 5, 5);
+            }
+            LogitechGSDK.LogiPlaySpringForce(0, 5, 5, 5);
+            LogitechGSDK.LogiStopSpringForce(0);
+
+            LogitechGSDK.DIJOYSTATE2ENGINES rec;
+            rec = LogitechGSDK.LogiGetStateUnity(0);
 
 
+            //Giro Volante
+            xAxes = rec.lX / 32560f; //-1 0 1
+            xAxes = xAxes * 4;
+
+            //Presion Acelerador (Simple)
+            if (rec.lY > 0)
+            {
+                GasInput = 0;
+            }
+            else if (rec.lY < 0)
+            {
+                GasInput = rec.lY / -32768f;
+            }
 
 
+            //Presion Freno
+            //32767 a -32768
+            if (rec.lRz > 32600) //Antes de X valor no es freno
+            {
+                BreakInput = 0;
+                BreakStatus = false;
+            }
+            else if (rec.lRz < 32600) //Despues de x Valor ya es freno
+            {
+                // x - factor y Entre mas chico el numero dividio entre el factor sera 1
+                BreakInput = rec.lRz / -32768f;
+                BreakStatus = true;
+            }
+            //BreakInput = rec.lRz;
+
+        }
+        else
+        {
+            print("No steering Wheel connected");
+            isWheelConnected = false;
+        }
+
+        //Cambio de direccion
+        if (LogitechGSDK.LogiButtonTriggered(0, 4))
+        {
+            isBackWard = false;
+        }
+        else if (LogitechGSDK.LogiButtonTriggered(0, 5))
+        {
+            isBackWard = true;
+        }
+
+
+    }
+    // Use this for shutdown 
+    void Stop()
+    {
+        LogitechGSDK.LogiSteeringShutdown();
+    }
+    
 }

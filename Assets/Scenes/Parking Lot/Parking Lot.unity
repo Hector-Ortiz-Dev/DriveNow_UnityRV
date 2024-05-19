@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2054719, g: 0.26265645, b: 0.30801326, a: 1}
+  m_IndirectSpecularColor: {r: 0.2054719, g: 0.26265654, b: 0.30801326, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2670,8 +2670,8 @@ Transform:
   m_GameObject: {fileID: 171994967}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7015558, y: 0.13149677, z: -0.14275496, w: -0.6856742}
-  m_LocalPosition: {x: -0.0163, y: -0.0532, z: 0.1579}
-  m_LocalScale: {x: 0.018130338, y: 0.011626562, z: 0.00965958}
+  m_LocalPosition: {x: -0.0254, y: -0.0442, z: 0.1544}
+  m_LocalScale: {x: 0.030552516, y: 0.019592615, z: 0.016277937}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 221837068}
@@ -30443,6 +30443,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9308c19ba601d6468020f25bfcfddbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xAxes: 0
+  GasInput: 0
+  BreakInput: 0
+  BreakStatus: 0
+  isBackWard: 0
+  isWheelConnected: 0
+  CurrentGear: 0
   frontLeftWheelCollider: {fileID: 71244658}
   frontRightWheelCollider: {fileID: 1909948207}
   rearLeftWheelCollider: {fileID: 2117228788}
