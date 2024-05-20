@@ -551,6 +551,12 @@ public class CarController : MonoBehaviour
         if (steeringWheelTransform != null)
         {
             steeringWheelTransform.localRotation = Quaternion.Euler(-65, 0, 0) * Quaternion.Euler(0, steerAngle, 0);
+
+            if (isWheelConnected == true)
+            {
+                steeringWheelTransform.localRotation = Quaternion.Euler(-65, 0, 0) * Quaternion.Euler(0, steerAngle * 3.8f, 0);
+            }
+
         }
     }
 
