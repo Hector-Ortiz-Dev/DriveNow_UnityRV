@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2054719, g: 0.26265654, b: 0.30801326, a: 1}
+  m_IndirectSpecularColor: {r: 0.2054719, g: 0.26265645, b: 0.30801326, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 93386645}
   - component: {fileID: 93386644}
   - component: {fileID: 93386643}
-  m_Layer: 5
+  m_Layer: 26
   m_Name: BtnSalir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -278,15 +278,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 93386641}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 390}
+  m_LocalScale: {x: 0.7996453, y: 0.7996453, z: 0.7996453}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025404587}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -200, y: -268}
+  m_AnchoredPosition: {x: -649, y: 73.99997}
   m_SizeDelta: {x: 626.5, y: 102.5}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &93386643
@@ -2922,7 +2922,7 @@ GameObject:
   - component: {fileID: 886365205}
   - component: {fileID: 886365204}
   - component: {fileID: 886365203}
-  m_Layer: 5
+  m_Layer: 26
   m_Name: BtnComenzar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2937,15 +2937,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886365201}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 402}
+  m_LocalScale: {x: 0.7741975, y: 0.7741975, z: 0.7741975}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025404587}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -200, y: -69}
+  m_AnchoredPosition: {x: -662, y: 168}
   m_SizeDelta: {x: 626.5, y: 102.5}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &886365203
@@ -3534,7 +3534,7 @@ GameObject:
   - component: {fileID: 1025404590}
   - component: {fileID: 1025404589}
   - component: {fileID: 1025404588}
-  m_Layer: 5
+  m_Layer: 26
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3612,9 +3612,9 @@ Canvas:
   m_GameObject: {fileID: 1025404586}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 1724126601}
+  m_PlaneDistance: 10.89
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -5089,6 +5089,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c13c47af5596884fb89efc6e75ab641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  steeringWheelTransform: {fileID: 0}
+  xAxes: 0
+  GasInput: 0
+  BreakInput: 0
+  BreakStatus: 0
+  isBackWard: 0
+  isWheelConnected: 0
 --- !u!1 &1724126598
 GameObject:
   m_ObjectHideFlags: 0
@@ -5101,6 +5108,7 @@ GameObject:
   - component: {fileID: 1724126601}
   - component: {fileID: 1724126600}
   - component: {fileID: 1724126599}
+  - component: {fileID: 1724126603}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -5220,12 +5228,30 @@ Transform:
   m_GameObject: {fileID: 1724126598}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.9364031, z: -0, w: 0.3509264}
-  m_LocalPosition: {x: -16.73, y: 1.54, z: 19.61}
+  m_LocalPosition: {x: -16.73, y: 2.308, z: 19.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 138.912, z: 0}
+--- !u!114 &1724126603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724126598}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Device: 0
+  m_PoseSource: 2
+  m_PoseProviderComponent: {fileID: 0}
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_UseRelativeTransform: 1
 --- !u!1 &1771593763
 GameObject:
   m_ObjectHideFlags: 0
@@ -6228,7 +6254,7 @@ GameObject:
   - component: {fileID: 2075147392}
   - component: {fileID: 2075147394}
   - component: {fileID: 2075147393}
-  m_Layer: 5
+  m_Layer: 26
   m_Name: Logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6243,15 +6269,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2075147391}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -72}
+  m_LocalScale: {x: 0.30022138, y: 0.30022138, z: 0.30022138}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025404587}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 11, y: -36}
+  m_AnchoredPosition: {x: 94, y: -565}
   m_SizeDelta: {x: 1062.75, y: 466.5}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2075147393
@@ -7431,7 +7457,7 @@ Transform:
   m_GameObject: {fileID: 919132149385839105}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.74656814, z: -0, w: 0.665309}
-  m_LocalPosition: {x: -13.22, y: -0.023000002, z: 18.15}
+  m_LocalPosition: {x: -10.16, y: -0.023000002, z: 15.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
